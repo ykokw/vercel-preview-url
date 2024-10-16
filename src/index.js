@@ -6,6 +6,7 @@ const githubBranch =
   process.env.GITHUB_EVENT_NAME === 'pull_request_target'
     ? process.env.GITHUB_HEAD_REF
     : process.env.GITHUB_REF.replace('refs/heads/', '')
+const previewSourceBranch = process.env.PREVIEW_SOURCE_BRANCH || ''
 const githubProject = process.env.GITHUB_REPOSITORY
 const githubRepo = githubProject.split('/')[1]
 const vercelOptions = {
@@ -25,7 +26,7 @@ const vercelOptions = {
 core.info(`Retrieving deployment preview for ${githubRepo}/${githubBranch}`)
 const { url, state, branchAlias } = await getDeploymentUrl(
   githubRepo,
-  githubBranch,
+  previewSourceBranch.length > 0 ? previewSourceBranch : githubBranch,
   vercelOptions
 )
 
